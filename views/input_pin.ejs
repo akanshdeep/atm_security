@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ATM System Login: Input Pin</title>
+    <meta name="description" content="Flat UI Kit Free is a Twitter Bootstrap Framework design and Theme, this responsive framework includes a PSD and HTML version."/>
+
+    <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="/public/dist/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="/public/dist/css/flat-ui.css" rel="stylesheet">
+  
+    <link href="/public/css/custom.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="/public/img/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="dist/js/vendor/html5shiv.js"></script>
+      <script src="dist/js/vendor/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="demo-headline" style="padding:0px;">
+        <h1 class="demo-logo">ATM
+          <small>24 Hour Banking</small>
+        </h1>
+        <div id="info" class="alert alert-info" role="alert" style="visibility: hidden;" >
+       
+        </div>
+      </div> <!-- /demo-headline -->
+      <div class="row">
+        <div class="col-xs-12" id="screenView">
+          <!-- Place <h1></h1> below -->
+
+          <!-- Replace Video with Animated Gif or Animated SVG -->
+          <div class="row">
+            <div class="col-xs-8 text-center" style="border-right:solid 3px #CCC;background: darkgray;">
+              <h1 class="demo-section-title text-uppercase text-center">Input Your Pin Number</h1>
+              
+              <input style="color:black" type="text" id="userPinInput" class="form-control" disabled/>
+              <!-- TABLE -->
+              <div id="pinPad">
+               
+              </div><!-- // Pin Pad -->
+              
+              <div id="confirmPin">
+                <a href="/pinConfirm" class="btn btn-block btn-md btn-success btn-default btn-circle " style="position: relative;top:63px;" id="pinConf">Confirm</a>
+              </div>
+              <div id="cancelTransaction">
+                <a href="/pincancel" class="btn btn-block btn-lg btn-danger text-uppercase"><span class="fui-cross"></span> Cancel</a>
+              </div><!-- // Pin Pad -->
+            </div> 
+
+
+            <div class="col-xs-4" style="background: darkgray;">
+              <div style="margin-top:8rem;">
+                <img src="/public/img/CardInsertedGreenLight.png" style="width:16em;"/>
+              </div>
+            </div><!-- /.col-xs-4 -->
+
+            
+          </div><!-- // END login screen  -->
+      </div><!--  // END column-->
+      <div class="col-xs-12">
+        <h2><blockquote>This ATM System is for software testing only! --- <a href="#">sitemap</a></blockquote> </h2>
+      </div>
+  </div><!-- // END row-->
+
+      
+
+
+    </div> <!-- /container -->
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+
+    <script src="/public/dist/js/vendor/jquery.min.js"></script>
+    <script src="/public/dist/js/vendor/video.js"></script>
+    <script src="/public/dist/js/flat-ui.min.js"></script>
+    <script>
+     var i;
+    
+     const socket = io('http://localhost:3000')
+     socket.on('connect',()=>{
+       console.log('client connected to server ');
+     })
+    //  for(i=1;i<5;i++)
+    // { 
+    //   jQuery("#alert").css({"visibility":"visible"});   dont work here
+    //   jQuery("#alert").text("enter you "+i +" pin");
+    //   socket.emit('getpin',{});
+    // }
+
+    var i = 1, howManyTimes = 5;
+function f() {
+ jQuery("#info").css({"visibility":"visible"});
+  jQuery("#info").text("enter your  "+i+" pin" );
+      socket.emit('getpin',{});
+    i++;
+    if( i < howManyTimes ){
+        setTimeout( f, 6000 );
+    }
+}
+$( document ).ready(()=>{
+  setTimeout(f,2000);
+  
+})
+
+     socket.on('pin',(data)=>{
+       jQuery('#userPinInput').val(data);
+       jQuery("#info").css({"visibility":"hidden"});
+       console.log(data);
+       
+       if(data.length==4)
+       {
+         jQuery("#pinConf").attr("href","/pinconfirm")
+       }
+     })
+    //  socket.on('disconnect',()=>{
+    //    socket.disconnet();
+    //  })
+    </script>
+
+    <script>
+      videojs.options.flash.swf = "/public/dist/js/vendors/video-js.swf"
+    </script>
+  </body>
+</html>
